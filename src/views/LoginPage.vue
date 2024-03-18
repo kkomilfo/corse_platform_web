@@ -1,10 +1,10 @@
 <script setup>
 import {reactive} from 'vue';
-import {Auth} from '@/services/auth.js';
-import {jwtDecode} from "jwt-decode";
 import {useRouter} from "vue-router";
+import {useAuthStore} from "@/store/auth.js";
 
 const router = useRouter();
+const store = useAuthStore();
 
 const formState = reactive({
 	email: '',
@@ -12,18 +12,17 @@ const formState = reactive({
 });
 
 const onFinish = async values => {
-	try {
-		let response = await Auth.login(values.email, values.password, "administrator");
-		let token = response.token;
-		let decodedToken = jwtDecode(token);
-		let userRole = decodedToken.role;
-		await router.push("/admin")
-	} catch (e) {
+	await store.login(values.email, values.password, "administrator");
+	if (store.isAuthenticated) {
+		await router.push('/admin');
 	}
 };
+
 </script>
 
 <template>
+	<div v-if="store.isLoading">Loading...</div>
+	<div v-if="store.error">{{store.error}}</div>
 	<a-form
 			:model="formState"
 			name="basic"
