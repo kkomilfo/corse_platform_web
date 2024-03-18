@@ -21,7 +21,6 @@ router.beforeEach((to, from, next) => {
   if (requiresAuth) {
     const currentUser = localStorage.getItem('token');
 
-    console.log(currentUser)
     if (!currentUser) {
       return next({ path: "/login" });
     }

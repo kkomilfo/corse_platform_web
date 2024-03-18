@@ -7,7 +7,6 @@ export class Students {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }
         })
-        console.log(response)
         return response.data
     }
 }

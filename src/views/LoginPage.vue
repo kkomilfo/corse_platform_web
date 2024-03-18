@@ -15,14 +15,10 @@ const onFinish = async values => {
 	try {
 		let response = await Auth.login(values.email, values.password, "administrator");
 		let token = response.token;
-		console.log(token);
 		let decodedToken = jwtDecode(token);
-		console.log(decodedToken);
 		let userRole = decodedToken.role;
-		console.log(userRole);
 		await router.push("/admin")
 	} catch (e) {
-		window.alert(e);
 	}
 };
 </script>

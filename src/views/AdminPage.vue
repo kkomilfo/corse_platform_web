@@ -19,7 +19,7 @@ onMounted(loadStudents);
 		<div v-if="isLoading">Loading...</div>
 		<ul v-else>
 			<li v-for="student in students" :key="student.id">
-				<img :src="student.avatar_url" alt="Student Avatar" />
+				<a-avatar :size="64" :src="student.avatar_url"/>
 				<h2>{{ student.full_name }}</h2>
 				<p>{{ student.email }}</p>
 			</li>
