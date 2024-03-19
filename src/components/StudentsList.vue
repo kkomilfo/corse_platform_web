@@ -19,7 +19,9 @@ const handleOk = async () => {
 </script>
 
 <template>
-	<a-modal v-model:open="open" :confirm-loading="studentsStore.isLoading" title="Create a student" @ok="handleOk">
+	<a-modal v-model:open="open" :confirm-loading="studentsStore.isLoading" title="Create a student">
+		<template #footer>
+		</template>
 		<a-form
 				:label-col="{ span: 24 }"
 				:model="studentsStore.student"
@@ -27,6 +29,7 @@ const handleOk = async () => {
 				autocomplete="off"
 				layout="vertical"
 				name="basic"
+				@finish="handleOk"
 		>
 			<a-form-item
 					:rules="[{ required: true, message: 'Please input student full name!' }]"
@@ -58,6 +61,10 @@ const handleOk = async () => {
 					name="email"
 			>
 				<a-input v-model:value="studentsStore.student.email"/>
+			</a-form-item>
+
+			<a-form-item>
+				<a-button block :loading="studentsStore.isLoading" type="primary" html-type="submit" size="large">Submit</a-button>
 			</a-form-item>
 		</a-form>
 	</a-modal>
