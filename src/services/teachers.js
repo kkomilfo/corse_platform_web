@@ -1,8 +1,8 @@
 import api from "@/services/api.js";
 
-export class Students {
-    static async getStudents() {
-        let response = await api.get('/students', {
+export class Teachers {
+    static async getTeachers() {
+        let response = await api.get('/teachers', {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }
@@ -10,8 +10,8 @@ export class Students {
         return response.data
     }
 
-    static async createStudent(student) {
-        let response = await api.post('/students', student, {
+    static async createTeacher(teacher) {
+        let response = await api.post('/teachers', teacher, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }
