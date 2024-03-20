@@ -1,7 +1,6 @@
 import {createRouter, createWebHistory} from 'vue-router';
 import AdminPage from '../views/AdminPage.vue';
 import HomePage from "../views/HomePage.vue";
-import {jwtDecode} from "jwt-decode";
 import LoginPage from "@/views/LoginPage.vue";
 import {useAuthStore} from "@/store/auth.js";
 
@@ -20,6 +19,7 @@ router.beforeEach((to, from, next) => {
   const { requiresAuth } = to.meta;
   const store = useAuthStore()
 
+  console.log(to.path, from.path, store.isAuthenticated, store.role, store.token)
   if (requiresAuth) {
     if (!store.isAuthenticated) {
       return next({ path: "/login" });
