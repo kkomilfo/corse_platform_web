@@ -1,10 +1,13 @@
 <script setup>
-import {reactive} from 'vue';
+import {reactive, ref} from 'vue';
 import {useRouter} from "vue-router";
 import {useAuthStore} from "@/store/auth.js";
 
 const router = useRouter();
 const store = useAuthStore();
+
+const data = reactive(['teacher', 'administrator', 'student']);
+const value = ref(data[0]);
 
 const formState = reactive({
 	email: '',
@@ -12,9 +15,9 @@ const formState = reactive({
 });
 
 const onFinish = async values => {
-	await store.login(values.email, values.password, "administrator");
+	await store.login(values.email, values.password, value.value);
 	if (store.isAuthenticated) {
-		await router.push('/admin');
+		await router.push(`/${store.role}`);
 	}
 };
 
@@ -23,6 +26,7 @@ const onFinish = async values => {
 <template>
 	<div v-if="store.isLoading">Loading...</div>
 	<div v-if="store.error">{{store.error}}</div>
+	<a-segmented v-model:value="value" block :options="data" />
 	<a-form
 			:model="formState"
 			name="basic"

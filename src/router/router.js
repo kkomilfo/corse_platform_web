@@ -2,12 +2,14 @@ import {createRouter, createWebHistory} from 'vue-router';
 import AdminPage from '../views/AdminPage.vue';
 import HomePage from "../views/HomePage.vue";
 import LoginPage from "@/views/LoginPage.vue";
+import TeacherPage from "@/views/TeacherPage.vue";
 import {useAuthStore} from "@/store/auth.js";
 
 const routes = [
   { path: '/', component: HomePage, meta: { requiresAuth: true }},
   { path: '/login', component: LoginPage },
   { path: '/admin', component: AdminPage, meta: { requiresAuth: true } },
+  { path: '/teacher', component: TeacherPage, meta: { requiresAuth: true } }
 ]
 
 const router = createRouter({
