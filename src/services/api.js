@@ -7,6 +7,12 @@ const api = axios.create({
 });
 
 
+api.interceptors.request.use(config => {
+    const token = localStorage.getItem('token');
+    config.headers.Authorization = `Bearer ${token}`;
+    return config;
+})
+
 api.interceptors.response.use(
     response => response, // Do nothing on success
     error => {
