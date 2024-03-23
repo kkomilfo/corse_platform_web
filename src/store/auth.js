@@ -1,12 +1,12 @@
 import {defineStore} from 'pinia';
 import {jwtDecode} from "jwt-decode";
 import {computed, ref} from "vue";
-import {Auth} from "@/services/auth.js"; // Assuming you're using Pinia
+import {Auth} from "@/services/auth.js";
+import {message} from "ant-design-vue"; // Assuming you're using Pinia
 
 export const useAuthStore = defineStore('auth', () => {
     const token = ref(localStorage.getItem('token'))
     const isLoading = ref(false)
-    const error = ref(null)
 
     const isAuthenticated = computed(() => token.value !== null)
     const role = computed(() => token.value !== null ? jwtDecode(token.value).role : null)
@@ -18,7 +18,7 @@ export const useAuthStore = defineStore('auth', () => {
             token.value = response.token
             isLoading.value = false
         } catch (e) {
-            error.value = e
+            message.error(e.response.data)
             isLoading.value = false
         }
     }
