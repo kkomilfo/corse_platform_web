@@ -75,6 +75,7 @@ const handleOk = async () => {
 			class="demo-loadmore-list"
 			item-layout="horizontal"
 			bordered
+			style="height: 100vh"
 	>
 		<template #header>
 			<a-flex justify="space-between" align="center">

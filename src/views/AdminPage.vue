@@ -50,7 +50,7 @@ const handleOk = async () => {
 				title="Course Platform"
 				sub-title="Innovative online platform for university students and teachers"
 		/>
-		<a-layout-content style="margin: 5px">
+		<a-layout-content style="margin: 5px; height: 100vh">
 			<a-row :gutter="16">
 				<a-col :span="10">
 					<StudentsList />
@@ -162,7 +162,7 @@ const handleOk = async () => {
 						</a-form>
 					</a-modal>
 
-					<a-list bordered :data-source="teachersStore.teachers" item-layout="vertical" size="middle">
+					<a-list bordered style="height: 100vh" :data-source="teachersStore.teachers" item-layout="vertical" size="middle">
 						<template #header>
 							<a-flex justify="space-between" align="center">
 								<h2>Teacher List</h2>
