@@ -2,11 +2,22 @@ import api from "@/services/api.js";
 
 export class Courses {
     static async createCourse(teacher) {
-        let response = await api.post('/courses', teacher, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-            }
-        })
+        let response = await api.post('/courses', teacher)
+        return response.data
+    }
+
+    static async getCourse(id) {
+        let response = await api.get(`/courses/${id}`)
+        return response.data
+    }
+
+    static async appendModule(id, module) {
+        let response = await api.post(`/courses/${id}/module`, module)
+        return response.data
+    }
+
+    static async appendSubject(id, lesson) {
+        let response = await api.post(`/courses/module/${id}/subject`, lesson)
         return response.data
     }
 }

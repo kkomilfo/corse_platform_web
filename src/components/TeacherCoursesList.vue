@@ -29,7 +29,7 @@ onMounted(() => store.fetchCourses());
 							:description="item.description"
 					>
 						<template #title>
-							<router-link :to="{ name: 'teacherCourseOverview', params: { id: 1 } }">
+							<router-link :to="{ name: 'teacherCourseOverview', params: { id: item.id } }">
 								{{ item.title }}
 							</router-link>
 						</template>
