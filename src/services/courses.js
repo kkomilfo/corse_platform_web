@@ -20,4 +20,12 @@ export class Courses {
         let response = await api.post(`/courses/module/${id}/subject`, lesson)
         return response.data
     }
+
+    static async enrollStudent(value, student) {
+        let response = await api.post(`/courses/enroll`, {
+            course_id: parseInt(value),
+            student_id: student
+        })
+        return response.data
+    }
 }

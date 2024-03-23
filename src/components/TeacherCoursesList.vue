@@ -23,7 +23,7 @@ onMounted(() => store.fetchCourses());
 		<template #renderItem="{ item }">
 			<a-list-item :key="item.id" >
 					<template #actions>
-						<span>Students: {{ item.students == null ? 0 : item.students.count }}</span>
+						<span>Students: {{ item.students == null ? 0 : item.students.length }}</span>
 					</template>
 					<a-list-item-meta
 							:description="item.description"

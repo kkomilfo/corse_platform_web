@@ -1,8 +1,9 @@
 import {defineStore} from 'pinia';
 import {ref} from "vue";
 import {Courses} from "@/services/courses.js";
+import {Students} from "@/services/students.js";
 
-export const useTeacherCourseOverviewStore = defineStore('teacherCoursesStore', () => {
+export const useTeacherCourseOverviewStore = defineStore('teacherCourseOverview', () => {
     const course = ref({})
     const structure = ref([]);
     const isLoading = ref(false);
@@ -20,14 +21,12 @@ export const useTeacherCourseOverviewStore = defineStore('teacherCoursesStore', 
         filesURL: null,
         fileName: null,
     });
+    const students = ref([]);
+    const selectedStudents = ref([]);
 
     const selectedSubject = () => {
         if (selectedSubjectID.value) {
-            console.log(selectedSubjectID)
-            console.log(course.value.modules.flatMap(module => module.subjects))
-            const a = course.value.modules.flatMap(module => module.subjects).find(subject => subject.id == selectedSubjectID.value);
-            console.log(a);
-            return a
+            return course.value.modules.flatMap(module => module.subjects).find(subject => subject.id == selectedSubjectID.value);
         }
         return null;
     }
@@ -67,6 +66,11 @@ export const useTeacherCourseOverviewStore = defineStore('teacherCoursesStore', 
             { type: 'divider' },
             { label: "Add module", key: "addModule" }
         ]
+
+        const studentsResponse = await Students.getStudents()
+        students.value = studentsResponse.map(student => {
+            return { value: student.id, label: student.full_name }
+        })
         isLoading.value = false;
     }
 
@@ -104,6 +108,15 @@ export const useTeacherCourseOverviewStore = defineStore('teacherCoursesStore', 
         }
     }
 
+    async function enroll() {
+        isLoading.value = true;
+        for (const student of selectedStudents.value) {
+            await Courses.enrollStudent(courseID.value, student);
+        }
+        selectedStudents.value = [];
+        isLoading.value = false;
+    }
+
     return {
         course,
         isLoading,
@@ -114,6 +127,9 @@ export const useTeacherCourseOverviewStore = defineStore('teacherCoursesStore', 
         subject,
         createSubject,
         selectedSubjectID,
-        selectedSubject
+        selectedSubject,
+        students,
+        selectedStudents,
+        enroll
     }
 })

@@ -6,11 +6,15 @@ import {useTeacherCourseOverviewStore} from "@/store/teacherCourseOverview.js";
 const route = useRoute()
 const showModuleModal = ref(false);
 const showSubjectModal = ref(false);
+const showStudentModal = ref(false);
+// const selectedStudents = ref([]);
+
 const teacherCourseOverviewStore = useTeacherCourseOverviewStore();
 
 watch(() => route.params.id, fetchData, { immediate: true })
 
 async function fetchData(id) {
+	console.log("enter", id)
 	await teacherCourseOverviewStore.fetchCourse(id);
 }
 
@@ -40,6 +44,15 @@ async function handleOk() {
 async function handleSubjectOk() {
 	await teacherCourseOverviewStore.createSubject();
 	showSubjectModal.value = false;
+}
+
+function handleAddStudentClick() {
+	showStudentModal.value = true;
+}
+
+async function handleSubmit() {
+	await teacherCourseOverviewStore.enroll();
+	showStudentModal.value = false;
 }
 
 </script>
@@ -130,6 +143,23 @@ async function handleSubjectOk() {
 		</a-form>
 	</a-modal>
 
+	<a-modal v-model:open="showStudentModal" :confirm-loading="teacherCourseOverviewStore.isLoading" title="Add student at course">
+		<template #footer>
+		</template>
+		<a-select
+				mode="multiple"
+				v-model:value="teacherCourseOverviewStore.selectedStudents"
+				placeholder="Please select a students"
+				:options="teacherCourseOverviewStore.students"
+				style="width: 100%"
+		>
+		</a-select>
+
+		<a-divider/>
+
+		<a-button block :loading="teacherCourseOverviewStore.isLoading" type="primary" html-type="submit" size="large" @click="handleSubmit" >Submit</a-button>
+	</a-modal>
+
 	<a-layout>
 		<a-layout-sider style="width: 256px; height: 100vh">
 			<a-menu
@@ -142,7 +172,7 @@ async function handleSubjectOk() {
 			>
 			</a-menu>
 		</a-layout-sider>
-		<a-layout-content>
+		<a-layout-content v-if="teacherCourseOverviewStore.course">
 			<a-page-header
 					style="border: 1px solid rgb(235, 237, 240)"
 					:title="teacherCourseOverviewStore.course.title"
@@ -164,6 +194,7 @@ async function handleSubjectOk() {
 		</a-layout-content>
 	</a-layout>
 
+	<a-float-button description="Add" @click="handleAddStudentClick" />
 </template>
 
 <style scoped>
