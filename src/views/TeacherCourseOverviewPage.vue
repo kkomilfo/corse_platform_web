@@ -55,6 +55,16 @@ async function handleSubmit() {
 	showStudentModal.value = false;
 }
 
+function isoToYYYYMMDD(isoString) {
+	const date = isoString.slice(0, 10).replace(/-/g, "-");
+	if (date === '0001-01-01') {
+		return '';
+	} else {
+		return date;
+	}
+}
+
+
 </script>
 
 <template>
@@ -186,10 +196,17 @@ async function handleSubmit() {
 						{{ teacherCourseOverviewStore.selectedSubject().description }}
 					</a-typography-paragraph>
 				</a-typography>
-				<a-divider>Text</a-divider>
-				<a-card size="small" :title="teacherCourseOverviewStore.selectedSubject().files[0].name" style="width: 300px; margin: 10px">
-					<template #extra><a target=”_blank” :href="teacherCourseOverviewStore.selectedSubject().files[0].url">Go to file</a></template>
-				</a-card>
+				<a-divider>Info</a-divider>
+				<a-flex justify="space-between" align="center" style="margin: 10px">
+					<a-card size="small" :title="teacherCourseOverviewStore.selectedSubject().files[0].name" style="width: 300px">
+						<template #extra><a target=”_blank” :href="teacherCourseOverviewStore.selectedSubject().files[0].url">Go to file</a></template>
+					</a-card>
+
+					<a-typography-text>
+						{{ isoToYYYYMMDD(teacherCourseOverviewStore.selectedSubject().due_date) }}
+					</a-typography-text>
+				</a-flex>
+
 			</template>
 		</a-layout-content>
 	</a-layout>
