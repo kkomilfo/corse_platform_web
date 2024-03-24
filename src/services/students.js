@@ -18,4 +18,9 @@ export class Students {
         })
         return response.data
     }
+
+    static async getCourseStudents(id) {
+        let response = await api.get(`/courses/${id}/students`)
+        return response.data
+    }
 }
