@@ -2,6 +2,7 @@
 import {reactive, ref, watch, watchEffect} from "vue";
 import {useRoute} from "vue-router";
 import {useTeacherCourseOverviewStore} from "@/store/teacherCourseOverview.js";
+import router from "@/router/router.js";
 
 const route = useRoute()
 const showModuleModal = ref(false);
@@ -28,6 +29,9 @@ function handleClick(e) {
 	if (e.key.startsWith('addLesson')) {
 		teacherCourseOverviewStore.subject.moduleID = e.key.split('-')[1];
 		showSubjectModal.value = true;
+	}
+	if (e.key.startsWith('works')) {
+		router.push(`/teacher/course/${route.params.id}/students`);
 	}
 	switch (e.key) {
 		case 'addModule':

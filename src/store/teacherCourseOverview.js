@@ -64,7 +64,9 @@ export const useTeacherCourseOverviewStore = defineStore('teacherCourseOverview'
         structure.value = [
             ...modules,
             { type: 'divider' },
-            { label: "Add module", key: "addModule" }
+            { label: "Add module", key: "addModule" },
+            { type: 'divider' },
+            { label: "Students", key: "works" }
         ]
 
         const studentsResponse = await Students.getStudents()

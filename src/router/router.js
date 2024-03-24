@@ -5,13 +5,15 @@ import LoginPage from "@/views/LoginPage.vue";
 import TeacherPage from "@/views/TeacherPage.vue";
 import {useAuthStore} from "@/store/auth.js";
 import TeacherCourseOverviewPage from "@/views/TeacherCourseOverviewPage.vue";
+import CourseStudents from "@/views/CourseStudents.vue";
 
 const routes = [
   { path: '/', component: HomePage, meta: { requiresAuth: true }},
   { path: '/login', component: LoginPage },
   { path: '/admin', component: AdminPage, meta: { requiresAuth: true } },
   { path: '/teacher', component: TeacherPage, meta: { requiresAuth: true } },
-  { path: '/teacher/course/:id', name: 'teacherCourseOverview',  component: TeacherCourseOverviewPage, meta: { requiresAuth: true } }
+  { path: '/teacher/course/:id', name: 'teacherCourseOverview',  component: TeacherCourseOverviewPage, meta: { requiresAuth: true } },
+  { path: '/teacher/course/:id/students', name: 'teacherCourseStudents',  component: CourseStudents, meta: { requiresAuth: true } }
 ]
 
 const router = createRouter({
