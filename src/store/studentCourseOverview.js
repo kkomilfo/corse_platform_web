@@ -1,6 +1,9 @@
 import {defineStore} from 'pinia';
 import {ref, watch} from "vue";
 import {Courses} from "@/services/courses.js";
+import {Students} from "@/services/students.js";
+import {useAuthStore} from "@/store/auth.js";
+import {message} from "ant-design-vue";
 
 export const useStudentCourseOverviewStore = defineStore('useStudentCourseOverviewStore', () => {
     const course = ref({})
@@ -8,6 +11,12 @@ export const useStudentCourseOverviewStore = defineStore('useStudentCourseOvervi
     const isLoading = ref(false);
     const courseID = ref(null);
     const selectedSubjectID = ref(null);
+    const afile = ref({
+        name: null,
+        url: null
+    });
+
+    const subject = ref(null)
 
     const selectedSubject = () => {
         if (selectedSubjectID.value) {
@@ -16,10 +25,40 @@ export const useStudentCourseOverviewStore = defineStore('useStudentCourseOvervi
         return null;
     }
 
-    watch(selectedSubjectID, () => {
-        // fetch student works
-        console.log("TEST: ", selectedSubjectID)
+    watch(selectedSubjectID, (newValue) => {
+        let foundSubject = findSubjectByID(newValue)
+        console.log("Found subject", foundSubject)
+        if (foundSubject.type == 'Lecture') {
+            subject.value = foundSubject
+        } else {
+            fetchStudentWork(newValue)
+        }
     })
+
+    function findSubjectByID(subjectID) {
+        for (let module of course.value.modules) {
+            for (let subject of module.subjects) {
+                if (subject.id == subjectID) {
+                    return subject;
+                }
+            }
+        }
+        return null;
+    }
+
+    async function fetchStudentWork(value) {
+        let store = useAuthStore()
+        let studentUserID = store.userID
+        isLoading.value = true;
+        try {
+            subject.value = await Students.getStudentWork(value, studentUserID)
+            console.log("loaded subject", subject)
+            isLoading.value = false;
+        } catch (e) {
+            message.error("Failed to fetch student work")
+            isLoading.value = false;
+        }
+    }
 
     async function fetchCourse(courseId) {
         courseID.value = courseId;
@@ -51,6 +90,29 @@ export const useStudentCourseOverviewStore = defineStore('useStudentCourseOvervi
         isLoading.value = false;
     }
 
+    async function uploadWork() {
+        try {
+            const request = {
+                subject_id: parseInt(selectedSubjectID.value),
+                files: [
+                    {
+                        name: afile.value.name,
+                        url: afile.value.url
+                    }
+                ]
+            }
+            let store = useAuthStore()
+            let studentUserID = store.userID
+            isLoading.value = true;
+            await Students.uploadWork(request)
+            subject.value = await Students.getStudentWork(parseInt(selectedSubjectID.value), studentUserID)
+            isLoading.value = false;
+        } catch (e) {
+            message.error("Failed to upload work")
+            isLoading.value = false;
+        }
+    }
+
     return {
         course,
         isLoading,
@@ -58,5 +120,8 @@ export const useStudentCourseOverviewStore = defineStore('useStudentCourseOvervi
         structure,
         selectedSubjectID,
         selectedSubject,
+        subject,
+        afile,
+        uploadWork
     }
 })

@@ -23,4 +23,14 @@ export class Students {
         let response = await api.get(`/courses/${id}/students`)
         return response.data
     }
+
+    static async getStudentWork(subjectID, studentID) {
+        let response = await api.get(`courses/subject/${subjectID}/student/${studentID}`)
+        return response.data
+    }
+
+    static async uploadWork(request) {
+        let response = await api.post(`students/work`, request)
+        return response.data
+    }
 }

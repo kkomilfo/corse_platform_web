@@ -10,6 +10,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     const isAuthenticated = computed(() => token.value !== null)
     const role = computed(() => token.value !== null ? jwtDecode(token.value).role : null)
+    const userID = computed(() => token.value !== null ? jwtDecode(token.value).user_id : null)
 
     async function login(email, password, userType) {
         try {
@@ -23,5 +24,5 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
-    return {token, isLoading, isAuthenticated, role, login}
+    return {token, isLoading, isAuthenticated, role, userID, login}
 })
