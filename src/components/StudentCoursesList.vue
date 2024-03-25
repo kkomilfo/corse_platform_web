@@ -28,7 +28,9 @@ onMounted(() => {
 						:description="item.description"
 				>
 					<template #title>
-						<a href="https://www.antdv.com/">{{ item.title }}</a>
+						<router-link :to="{ name: 'studentCourseOverview', params: { id: item.id } }">
+							{{ item.title }}
+						</router-link>
 					</template>
 					<template #avatar>
 						<a-avatar :src="item.image_url"/>

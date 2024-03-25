@@ -8,6 +8,7 @@ import TeacherCourseOverviewPage from "@/views/TeacherCourseOverviewPage.vue";
 import CourseStudents from "@/views/CourseStudents.vue";
 import StudentWorkPage from "@/views/StudentWorkPage.vue";
 import StudentPage from "@/views/StudentPage.vue";
+import StudentCourseOverviewPage from "@/views/StudentCourseOverviewPage.vue";
 
 const routes = [
   { path: '/', component: HomePage, meta: { requiresAuth: true }},
@@ -17,7 +18,8 @@ const routes = [
   { path: '/teacher/course/:id', name: 'teacherCourseOverview',  component: TeacherCourseOverviewPage, meta: { requiresAuth: true } },
   { path: '/teacher/course/:id/students', name: 'teacherCourseStudents',  component: CourseStudents, meta: { requiresAuth: true } },
   { path: '/teacher/subject/:subjectID/student/:studentID', name: 'teacherStudentWork', component: StudentWorkPage, meta: { requiresAuth: true } },
-  { path: '/student', component: StudentPage, meta: { requiresAuth: true } }
+  { path: '/student', component: StudentPage, meta: { requiresAuth: true } },
+  { path: '/student/course/:id', name: 'studentCourseOverview', component: StudentCourseOverviewPage, meta: { requiresAuth: true } }
 ]
 
 const router = createRouter({
