@@ -2,6 +2,7 @@
 import {ref, watch} from "vue";
 import {useCourseStudentsStore} from "@/store/courseStudents.js";
 import {useRoute} from "vue-router";
+import router from "@/router/router.js";
 
 const store = useCourseStudentsStore()
 
@@ -30,8 +31,8 @@ const columns = ref([
 	}
 ])
 
-function alert(id, record) {
-	console.log(id, record)
+function redirect(subjectID, studentID) {
+	router.push({ name: 'teacherStudentWork', params: { subjectID, studentID } })
 }
 
 </script>
@@ -46,11 +47,11 @@ function alert(id, record) {
 			<template v-if="column.key === 'student_works'">
 				<a-list size="small" bordered :data-source="record.student_works">
 					<template #renderItem="{ item }">
-						<a-list-item v-if="item.grade" @click="alert(item.subject_id, record.id)">
+						<a-list-item v-if="item.grade" @click="redirect(item.subject_id, record.id)">
 							<a-tag color="blue">Subject: {{item.subject_id}}</a-tag>
 							<a-tag color="success">Grade: {{item.grade}}</a-tag>
 						</a-list-item>
-						<a-list-item v-else  @click="alert(item.subject_id, record.id)">
+						<a-list-item v-else  @click="redirect(item.subject_id, record.id)">
 							<a-tag color="blue">Subject: {{item.subject_id}}</a-tag>
 							<a-tag color="warning">Waiting</a-tag>
 						</a-list-item>
