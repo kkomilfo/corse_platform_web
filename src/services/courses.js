@@ -28,4 +28,9 @@ export class Courses {
         })
         return response.data
     }
+
+    static async getStudentCourses() {
+        let response = await api.get('/courses/student')
+        return response.data
+    }
 }
