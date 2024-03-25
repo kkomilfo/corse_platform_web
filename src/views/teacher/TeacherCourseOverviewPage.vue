@@ -1,5 +1,5 @@
 <script setup>
-import {reactive, ref, watch, watchEffect} from "vue";
+import {ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import {useTeacherCourseOverviewStore} from "@/store/teacherCourseOverview.js";
 import router from "@/router/router.js";

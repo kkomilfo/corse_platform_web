@@ -1,14 +1,14 @@
 import {createRouter, createWebHistory} from 'vue-router';
-import AdminPage from '../views/AdminPage.vue';
-import HomePage from "../views/HomePage.vue";
-import LoginPage from "@/views/LoginPage.vue";
-import TeacherPage from "@/views/TeacherPage.vue";
+import AdminPage from '../views/admin/AdminPage.vue';
+import HomePage from "../views/core/HomePage.vue";
+import LoginPage from "@/views/core/LoginPage.vue";
+import TeacherPage from "@/views/teacher/TeacherPage.vue";
 import {useAuthStore} from "@/store/auth.js";
-import TeacherCourseOverviewPage from "@/views/TeacherCourseOverviewPage.vue";
-import CourseStudents from "@/views/CourseStudents.vue";
-import StudentWorkPage from "@/views/StudentWorkPage.vue";
-import StudentPage from "@/views/StudentPage.vue";
-import StudentCourseOverviewPage from "@/views/StudentCourseOverviewPage.vue";
+import TeacherCourseOverviewPage from "@/views/teacher/TeacherCourseOverviewPage.vue";
+import CourseStudents from "@/views/teacher/CourseStudents.vue";
+import StudentWorkPage from "@/views/teacher/StudentWorkPage.vue";
+import StudentPage from "@/views/student/StudentPage.vue";
+import StudentCourseOverviewPage from "@/views/student/StudentCourseOverviewPage.vue";
 
 const routes = [
   { path: '/', component: HomePage, meta: { requiresAuth: true }},
