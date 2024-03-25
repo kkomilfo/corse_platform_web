@@ -15,4 +15,9 @@ export class Teachers {
         let response = await api.get('/courses/teacher')
         return response.data
     }
+
+    static async grade(request) {
+        let response = await api.post('/teachers/grade', request)
+        return response.data
+    }
 }
