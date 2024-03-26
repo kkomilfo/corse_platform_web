@@ -2,6 +2,7 @@ import {defineStore} from 'pinia';
 import {ref} from "vue";
 import {Courses} from "@/services/courses.js";
 import {Students} from "@/services/students.js";
+import {message} from "ant-design-vue";
 
 export const useTeacherCourseOverviewStore = defineStore('teacherCourseOverview', () => {
     const course = ref({})
@@ -81,6 +82,7 @@ export const useTeacherCourseOverviewStore = defineStore('teacherCourseOverview'
         await Courses.appendModule(courseID.value, module.value);
         await fetchCourse(courseID.value);
         module.value = {}
+        message.success('Module created successfully');
     }
 
     async function createSubject() {
@@ -108,6 +110,7 @@ export const useTeacherCourseOverviewStore = defineStore('teacherCourseOverview'
             filesURL: null,
             fileName: null,
         }
+        message.success('Subject created successfully');
     }
 
     async function enroll() {
@@ -117,6 +120,7 @@ export const useTeacherCourseOverviewStore = defineStore('teacherCourseOverview'
         }
         selectedStudents.value = [];
         isLoading.value = false;
+        message.success('Students enrolled successfully');
     }
 
     return {

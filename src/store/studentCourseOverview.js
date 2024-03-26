@@ -107,6 +107,7 @@ export const useStudentCourseOverviewStore = defineStore('useStudentCourseOvervi
             await Students.uploadWork(request)
             subject.value = await Students.getStudentWork(parseInt(selectedSubjectID.value), studentUserID)
             isLoading.value = false;
+            message.success("Work uploaded successfully")
         } catch (e) {
             message.error("Failed to upload work")
             isLoading.value = false;

@@ -2,6 +2,7 @@
 import {ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import {useStudentWorkPageStore} from "@/store/useStudentWorkPageStore.js";
+import router from "@/router/router.js";
 
 const route = useRoute()
 const showUploadWorkModal = ref(false);
@@ -9,7 +10,7 @@ const showUploadWorkModal = ref(false);
 const store = useStudentWorkPageStore();
 
 
-watch(() => route.params, fetchData, { immediate: true })
+watch(() => route.params, fetchData, {immediate: true})
 
 function fetchData(params) {
 	store.fetchStudentWork(params.subjectID, params.studentID);
@@ -29,55 +30,90 @@ function isoToYYYYMMDD(isoString) {
 </script>
 
 <template>
-	<a-layout>
-		<a-layout-content v-if="store.subject">
-			<template v-if="store.subject">
-				<a-typography style="margin: 10px">
-					<a-typography-title>{{ store.subject.title }}</a-typography-title>
-					<a-typography-paragraph>
-						{{ store.subject.description }}
-					</a-typography-paragraph>
-				</a-typography>
-				<a-divider>Info</a-divider>
-				<a-flex justify="space-between" align="center" style="margin: 10px">
-					<div v-if="store.subject.task_files != null">
-						<a-card size="small" :title="store.subject.task_files[0].name" style="width: 300px">
-							<template #extra><a target=”_blank” :href="store.subject.task_files[0].url">Go to file</a></template>
-						</a-card>
-					</div>
+	<a-page-header
+			title="Student work"
+			sub-title="Course"
+			@back="() => router.back()"
+	/>
 
-					<div v-if="store.subject.student_files != null">
-						<a-card size="small" :title="store.subject.student_files[0].name" style="width: 300px">
-							<template #extra><a target=”_blank” :href="store.subject.student_files[0].url">Go to file</a></template>
-						</a-card>
-					</div>
-
+	<div v-if="store.subject" style="padding: 30px">
+		<a-typography>
+			<a-typography-title>{{ store.subject.title }}</a-typography-title>
+			<a-divider/>
+			<a-typography-paragraph>
+				{{ store.subject.description }}
+			</a-typography-paragraph>
+		</a-typography>
+		<a-divider/>
+		<a-descriptions bordered size="small">
+			<a-descriptions-item label="Type">Task</a-descriptions-item>
+			<a-descriptions-item label="Due Date">{{ isoToYYYYMMDD(store.subject.due_date) }}</a-descriptions-item>
+			<a-descriptions-item label="Grade">
+				<div v-if="store.subject && store.subject.grade">
 					<a-typography-text>
-						{{ isoToYYYYMMDD(store.subject.due_date) }}
+						{{ store.subject.grade }} points
 					</a-typography-text>
-					<a-typography-text>
-						{{ store.subject.type ?? "Task" }} points
-					</a-typography-text>
+				</div>
+				<div v-else>
+					<a-select
+							v-model:value="store.grade"
+							:options="store.grades"
+							placeholder="Please select"
+							style="width: 200px"
+					></a-select>
+				</div>
+			</a-descriptions-item>
 
+		</a-descriptions>
+		<a-divider/>
+		<a-row :gutter="16">
+			<a-col :span="12">
+				<a-list :data-source="store.subject.task_files">
+					<template #header>
+						<a-typography-text>Task files</a-typography-text>
+					</template>
+					<template #renderItem="{ item }">
+						<a-list-item>
+							<a-card hoverable>
+								<template #cover>
+									<img alt="example"
+											 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARMAAAC3CAMAAAAGjUrGAAAAOVBMVEXm6ezb3uGXoazq7e/Dyc/l6ey/xcyrs7vX3OCnr7jV2d6Zo63O09ibpa+5wMezusLv8fTP1NnIzdMlnmvOAAABdElEQVR4nO3Z0ZKaMBiAUUwQlsaIy/s/bAHdabXxdmn7n3PDCDeZb0JA0nUAAAAAAAAAAAAAAAAAAAAAAAAAAP+u3HT0qA6UT/3Q1J+iZslDemsIGmVJpY5NtaTl6NEdItcyt5eTnMdSY06UlD7eXMk/UvrWofwtzu+bdNGb5NPl4/VGCd4kz+tjZnq5FrxJn8pqfp4psZvkqVxvfUmabB5Naulvn78S3NsEbzKkMpYy3lvkft6PsZt03bSusfW8n8rXVPblNnqTfBkeL/JbkrJHid6k+1pe1yRp/txnSvgmD3uSnC9bFE129yTbrbRG0WTzleQepVZNfkuyR9HkOck9Svgmz0nW30uJ3uQ1iWdxI0n4Jo0k0Zu0kgRv0kwStsn23T63k4RtkmsZb+s/4euttb8zxdzfWbYvA7WO0x9qSZejR3eM3Ke0ZmnuF/cxp8m2s7MMfctyjpoEAAAAAAAAAAAAAAAAAAAAAAAAAPgPnHj1E96TDiAitj9wAAAAAElFTkSuQmCC"/>
+								</template>
+								<a-card-meta :title="item.name">
+									<template #description>
+										<a target="_blank" :href="item.url">Link</a>
+									</template>
+								</a-card-meta>
+							</a-card>
+						</a-list-item>
+					</template>
+				</a-list>
+			</a-col>
+			<a-col :span="12">
+				<a-list :data-source="store.subject.student_files">
+					<template #header>
+						<a-typography-text>Student files</a-typography-text>
+					</template>
+					<template #renderItem="{ item }">
+						<a-list-item>
+							<a-card hoverable>
+								<template #cover>
+									<img alt="example"
+											 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARMAAAC3CAMAAAAGjUrGAAAAOVBMVEXm6ezb3uGXoazq7e/Dyc/l6ey/xcyrs7vX3OCnr7jV2d6Zo63O09ibpa+5wMezusLv8fTP1NnIzdMlnmvOAAABdElEQVR4nO3Z0ZKaMBiAUUwQlsaIy/s/bAHdabXxdmn7n3PDCDeZb0JA0nUAAAAAAAAAAAAAAAAAAAAAAAAAAP+u3HT0qA6UT/3Q1J+iZslDemsIGmVJpY5NtaTl6NEdItcyt5eTnMdSY06UlD7eXMk/UvrWofwtzu+bdNGb5NPl4/VGCd4kz+tjZnq5FrxJn8pqfp4psZvkqVxvfUmabB5Naulvn78S3NsEbzKkMpYy3lvkft6PsZt03bSusfW8n8rXVPblNnqTfBkeL/JbkrJHid6k+1pe1yRp/txnSvgmD3uSnC9bFE129yTbrbRG0WTzleQepVZNfkuyR9HkOck9Svgmz0nW30uJ3uQ1iWdxI0n4Jo0k0Zu0kgRv0kwStsn23T63k4RtkmsZb+s/4euttb8zxdzfWbYvA7WO0x9qSZejR3eM3Ke0ZmnuF/cxp8m2s7MMfctyjpoEAAAAAAAAAAAAAAAAAAAAAAAAAPgPnHj1E96TDiAitj9wAAAAAElFTkSuQmCC"/>
+								</template>
+								<a-card-meta :title="item.name">
+									<template #description>
+										<a target="_blank" :href="item.url">Link</a>
+									</template>
+								</a-card-meta>
+							</a-card>
+						</a-list-item>
+					</template>
+				</a-list>
+			</a-col>
+		</a-row>
+	</div>
 
-					<div v-if="store.subject.grade">
-						<a-typography-text>
-							{{ store.subject.grade }} points
-						</a-typography-text>
-					</div>
-					<div v-else>
-						<a-select
-								v-model:value="store.grade"
-								:options="store.grades"
-								placeholder="Please select"
-								style="width: 200px"
-						></a-select>
-					</div>
-				</a-flex>
-
-			</template>
-		</a-layout-content>
-	</a-layout>
 </template>
 
 <style scoped>
