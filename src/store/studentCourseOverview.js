@@ -15,6 +15,10 @@ export const useStudentCourseOverviewStore = defineStore('useStudentCourseOvervi
         name: null,
         url: null
     });
+    const comment = ref({
+        content: "",
+    })
+
 
     const subject = ref(null)
 
@@ -114,6 +118,20 @@ export const useStudentCourseOverviewStore = defineStore('useStudentCourseOvervi
         }
     }
 
+    async function addComment() {
+        try {
+            await Courses.comment(subject.value.student_work_id, comment.value)
+            let store = useAuthStore()
+            let studentUserID = store.userID
+            subject.value = await Students.getStudentWork(parseInt(selectedSubjectID.value), studentUserID)
+
+            comment.value.content = ""
+
+            message.success("Comment added successfully")
+        } catch (e) {
+            message.error("Failed to download file")
+        }
+    }
     return {
         course,
         isLoading,
@@ -123,6 +141,8 @@ export const useStudentCourseOverviewStore = defineStore('useStudentCourseOvervi
         selectedSubject,
         subject,
         afile,
-        uploadWork
+        uploadWork,
+        addComment,
+        comment
     }
 })

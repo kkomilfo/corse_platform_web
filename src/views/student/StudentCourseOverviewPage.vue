@@ -42,6 +42,10 @@ async function handleOk() {
 	showUploadWorkModal.value = false;
 }
 
+async function handleSubmit() {
+	await studentCourseOverviewStore.addComment();
+}
+
 </script>
 
 <template>
@@ -186,6 +190,33 @@ async function handleOk() {
 						</a-col>
 					</a-row>
 
+					<a-list
+							v-if="studentCourseOverviewStore.subject.student_files"
+							:data-source="studentCourseOverviewStore.subject.comments ?? []"
+							:header="`Comments (${studentCourseOverviewStore.subject.comments?.length ?? 0})`"
+							item-layout="horizontal"
+					>
+						<template #renderItem="{ item }">
+							<a-list-item>
+								<a-comment
+										:author="item.user_type"
+										:content="item.content"
+								/>
+							</a-list-item>
+						</template>
+					</a-list>
+					<a-comment v-if="studentCourseOverviewStore.subject.student_files">
+						<template #content>
+							<a-form-item>
+								<a-textarea v-model:value="studentCourseOverviewStore.comment.content" :rows="4" />
+							</a-form-item>
+							<a-form-item>
+								<a-button html-type="submit" type="primary" @click="handleSubmit">
+									Add Comment
+								</a-button>
+							</a-form-item>
+						</template>
+					</a-comment>
 				</template>
 			</a-layout-content>
 		</a-layout>

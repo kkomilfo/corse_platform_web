@@ -33,4 +33,9 @@ export class Courses {
         let response = await api.get('/courses/student')
         return response.data
     }
+
+    static async comment(id, comment) {
+        let response = await api.post(`/comment/work/${id}`, comment)
+        return response.data
+    }
 }
