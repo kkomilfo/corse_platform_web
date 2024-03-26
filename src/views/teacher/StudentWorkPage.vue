@@ -26,6 +26,10 @@ function isoToYYYYMMDD(isoString) {
 	}
 }
 
+async function handleSubmit() {
+	await store.addComment();
+}
+
 
 </script>
 
@@ -112,6 +116,34 @@ function isoToYYYYMMDD(isoString) {
 				</a-list>
 			</a-col>
 		</a-row>
+
+		<a-list
+				v-if="store.subject.student_files"
+				:data-source="store.subject.comments ?? []"
+				:header="`Comments (${store.subject.comments?.length ?? 0})`"
+				item-layout="horizontal"
+		>
+			<template #renderItem="{ item }">
+				<a-list-item>
+					<a-comment
+							:author="item.user_type"
+							:content="item.content"
+					/>
+				</a-list-item>
+			</template>
+		</a-list>
+		<a-comment v-if="store.subject.student_files">
+			<template #content>
+				<a-form-item>
+					<a-textarea v-model:value="store.comment.content" :rows="4" />
+				</a-form-item>
+				<a-form-item>
+					<a-button html-type="submit" type="primary" @click="handleSubmit">
+						Add Comment
+					</a-button>
+				</a-form-item>
+			</template>
+		</a-comment>
 	</div>
 
 </template>
