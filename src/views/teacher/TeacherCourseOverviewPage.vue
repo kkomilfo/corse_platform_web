@@ -8,7 +8,6 @@ const route = useRoute()
 const showModuleModal = ref(false);
 const showSubjectModal = ref(false);
 const showStudentModal = ref(false);
-// const selectedStudents = ref([]);
 
 const teacherCourseOverviewStore = useTeacherCourseOverviewStore();
 
@@ -62,13 +61,11 @@ async function handleSubmit() {
 function isoToYYYYMMDD(isoString) {
 	const date = isoString.slice(0, 10).replace(/-/g, "-");
 	if (date === '0001-01-01') {
-		return '';
+		return '-';
 	} else {
 		return date;
 	}
 }
-
-
 </script>
 
 <template>
@@ -97,7 +94,6 @@ function isoToYYYYMMDD(isoString) {
 			</a-form-item>
 		</a-form>
 	</a-modal>
-
 	<a-modal v-model:open="showSubjectModal" :confirm-loading="teacherCourseOverviewStore.isLoading" title="Create a subject">
 		<template #footer>
 		</template>
@@ -156,7 +152,6 @@ function isoToYYYYMMDD(isoString) {
 			</a-form-item>
 		</a-form>
 	</a-modal>
-
 	<a-modal v-model:open="showStudentModal" :confirm-loading="teacherCourseOverviewStore.isLoading" title="Add student at course">
 		<template #footer>
 		</template>
@@ -173,49 +168,59 @@ function isoToYYYYMMDD(isoString) {
 
 		<a-button block :loading="teacherCourseOverviewStore.isLoading" type="primary" html-type="submit" size="large" @click="handleSubmit" >Submit</a-button>
 	</a-modal>
-
-	<a-layout>
-		<a-layout-sider style="width: 256px; height: 100vh">
-			<a-menu
-					id="dddddd"
-
-					mode="inline"
-					:items="teacherCourseOverviewStore.structure"
-					:selectedKeys="selectedKeys"
-					@click="handleClick"
-			>
-			</a-menu>
-		</a-layout-sider>
-		<a-layout-content v-if="teacherCourseOverviewStore.course">
+	<a-layout style="background: white" >
 			<a-page-header
-					style="border: 1px solid rgb(235, 237, 240)"
 					:title="teacherCourseOverviewStore.course.title"
 					sub-title="Course"
+					@back="() => router.push('/teacher')"
 			/>
-
-			<template v-if="teacherCourseOverviewStore.selectedSubject()">
-				<a-typography style="margin: 10px">
-					<a-typography-title>{{ teacherCourseOverviewStore.selectedSubject().title }}</a-typography-title>
-					<a-typography-paragraph>
-						{{ teacherCourseOverviewStore.selectedSubject().description }}
-					</a-typography-paragraph>
-				</a-typography>
-				<a-divider>Info</a-divider>
-				<a-flex justify="space-between" align="center" style="margin: 10px">
-					<a-card size="small" :title="teacherCourseOverviewStore.selectedSubject().files[0].name" style="width: 300px">
-						<template #extra><a target=”_blank” :href="teacherCourseOverviewStore.selectedSubject().files[0].url">Go to file</a></template>
-					</a-card>
-
-					<a-typography-text>
-						{{ isoToYYYYMMDD(teacherCourseOverviewStore.selectedSubject().due_date) }}
-					</a-typography-text>
-				</a-flex>
-
-			</template>
-		</a-layout-content>
+		<a-layout>
+			<a-layout-sider style="background: white">
+				<a-menu
+						style="height: 100vh"
+						mode="inline"
+						:items="teacherCourseOverviewStore.structure"
+						:selectedKeys="selectedKeys"
+						@click="handleClick"
+				>
+				</a-menu>
+			</a-layout-sider>
+			<a-layout-content style="background: white; padding: 0px 30px">
+				<template v-if="teacherCourseOverviewStore.selectedSubject()">
+					<a-typography>
+						<a-typography-title>{{ teacherCourseOverviewStore.selectedSubject().title }}</a-typography-title>
+						<a-divider/>
+						<a-typography-paragraph>
+							{{ teacherCourseOverviewStore.selectedSubject().description }}
+						</a-typography-paragraph>
+					</a-typography>
+					<a-divider/>
+					<a-descriptions bordered size="small">
+						<a-descriptions-item label="Type">{{ teacherCourseOverviewStore.selectedSubject().type }}</a-descriptions-item>
+						<a-descriptions-item label="Due Date">{{ isoToYYYYMMDD(teacherCourseOverviewStore.selectedSubject().due_date) }}</a-descriptions-item>
+					</a-descriptions>
+					<a-divider/>
+					<a-list :grid="{ gutter: 24, column: 4 }" :data-source="teacherCourseOverviewStore.selectedSubject().files">
+						<template #renderItem="{ item }">
+							<a-list-item>
+								<a-card hoverable>
+									<template #cover>
+										<img alt="example" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARMAAAC3CAMAAAAGjUrGAAAAOVBMVEXm6ezb3uGXoazq7e/Dyc/l6ey/xcyrs7vX3OCnr7jV2d6Zo63O09ibpa+5wMezusLv8fTP1NnIzdMlnmvOAAABdElEQVR4nO3Z0ZKaMBiAUUwQlsaIy/s/bAHdabXxdmn7n3PDCDeZb0JA0nUAAAAAAAAAAAAAAAAAAAAAAAAAAP+u3HT0qA6UT/3Q1J+iZslDemsIGmVJpY5NtaTl6NEdItcyt5eTnMdSY06UlD7eXMk/UvrWofwtzu+bdNGb5NPl4/VGCd4kz+tjZnq5FrxJn8pqfp4psZvkqVxvfUmabB5Naulvn78S3NsEbzKkMpYy3lvkft6PsZt03bSusfW8n8rXVPblNnqTfBkeL/JbkrJHid6k+1pe1yRp/txnSvgmD3uSnC9bFE129yTbrbRG0WTzleQepVZNfkuyR9HkOck9Svgmz0nW30uJ3uQ1iWdxI0n4Jo0k0Zu0kgRv0kwStsn23T63k4RtkmsZb+s/4euttb8zxdzfWbYvA7WO0x9qSZejR3eM3Ke0ZmnuF/cxp8m2s7MMfctyjpoEAAAAAAAAAAAAAAAAAAAAAAAAAPgPnHj1E96TDiAitj9wAAAAAElFTkSuQmCC" />
+									</template>
+									<a-card-meta :title="item.name">
+										<template #description>
+											<a target="_blank" :href="item.url">Link</a>
+										</template>
+									</a-card-meta>
+								</a-card>
+							</a-list-item>
+						</template>
+					</a-list>
+				</template>
+			</a-layout-content>
+		</a-layout>
 	</a-layout>
-
-	<a-float-button description="Add" @click="handleAddStudentClick" />
+	<a-float-button @click="handleAddStudentClick" />
 </template>
 
 <style scoped>
