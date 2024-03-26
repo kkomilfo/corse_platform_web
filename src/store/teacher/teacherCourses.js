@@ -1,6 +1,7 @@
 import {defineStore} from 'pinia';
 import {ref} from "vue";
 import {Teachers} from "@/services/teachers.js";
+import {message} from "ant-design-vue";
 
 export const useTeacherCoursesStore = defineStore('teacherCoursesStore', () => {
     const courses = ref([]);
@@ -8,8 +9,13 @@ export const useTeacherCoursesStore = defineStore('teacherCoursesStore', () => {
 
     async function fetchCourses() {
         isLoading.value = true;
-        courses.value = await Teachers.teacherCourses();
-        isLoading.value = false;
+        try {
+            courses.value = await Teachers.teacherCourses();
+            isLoading.value = false;
+        } catch (e) {
+            message.error(e.response.data)
+            isLoading.value = false;
+        }
     }
 
     return {
