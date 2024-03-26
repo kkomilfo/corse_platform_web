@@ -26,7 +26,7 @@ const columns = ref([
 		key: 'full_name',
 	},
 	{
-		title: 'Subjects',
+		title: 'Student Works',
 		key: 'student_works',
 	}
 ])
@@ -39,21 +39,22 @@ function redirect(subjectID, studentID) {
 
 <template>
 	<a-page-header
-			style="border: 1px solid rgb(235, 237, 240)"
 			title="Course students"
+			@back="() => router.back()"
 	/>
-	<a-table :dataSource="store.dataSource" :columns="columns">
+	<a-table :dataSource="store.dataSource" :columns="columns" :pagination="false">
 		<template #bodyCell="{ column, record }">
 			<template v-if="column.key === 'student_works'">
 				<a-list size="small" bordered :data-source="record.student_works">
 					<template #renderItem="{ item }">
 						<a-list-item v-if="item.grade" @click="redirect(item.subject_id, record.id)">
-							<a-tag color="blue">Subject: {{item.subject_id}}</a-tag>
+							<a-tag color="blue">{{item.subject_name}}</a-tag>
 							<a-tag color="success">Grade: {{item.grade}}</a-tag>
 						</a-list-item>
 						<a-list-item v-else  @click="redirect(item.subject_id, record.id)">
-							<a-tag color="blue">Subject: {{item.subject_id}}</a-tag>
-							<a-tag color="warning">Waiting</a-tag>
+							<a-tag color="blue">{{item.subject_name}}</a-tag>
+							<a-tag v-if="item.in_send" color="warning">Waiting</a-tag>
+							<a-tag v-else color="red">Not Send</a-tag>
 						</a-list-item>
 					</template>
 				</a-list>
